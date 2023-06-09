@@ -1,14 +1,35 @@
 import { HiShoppingCart } from "react-icons/hi";
+import useSWR from "swr";
+import axios from "axios";
+import { IProduct } from "@/utils/database/models/Product";
+
+const fetcher = async (url: string) => {
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch data");
+  }
+};
 
 Home.title = "Home";
 export default function Home() {
+  const { data, error } = useSWR("/api/product", fetcher);
+
+  if (error) {
+    return <div>Error loading data</div>;
+  }
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
   return (
     <main className="min-h-screen">
       <section className="bg-blue-500 p-3 text-white">
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-10 xl:gap-x-8">
-          {products.map((product) => (
+          {data.data.map((product: IProduct) => (
             <div
-              key={product.id}
+              key={product._id}
               className="group relative rounded-lg bg-white"
             >
               <div className="aspect-h-1 aspect-w-1 lg:aspect-none h-48 w-48 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-80">
@@ -45,46 +66,3 @@ export default function Home() {
     </main>
   );
 }
-
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 2,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 3,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 4,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-];
