@@ -20,6 +20,7 @@ export type PropsInput = {
   label?: string;
   required?: boolean | string;
   pattern?: { value: RegExp; message: string };
+  onChange?: (...event: any[]) => void;
 } & Omit<ControllerProps, "render"> &
   Omit<InputHTMLAttributes<HTMLInputElement>, "required" | "pattern">;
 

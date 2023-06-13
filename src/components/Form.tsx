@@ -14,7 +14,7 @@ export default function Form(props: PropsForm) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={`mx-auto max-w-md ${className}`}
+      className={`mx-auto max-w-lg ${className}`}
       noValidate
     >
       {children &&
@@ -63,12 +63,15 @@ export function InputText(props: PropsInput) {
               id={props.id || props.name}
               name={props.name}
               type={props.type || "text"}
-              value={value || ""}
+              value={props.value || value || ""}
               min={props.type == "number" ? props.min : undefined}
               max={props.type == "number" ? props.max : undefined}
               checked={props.type == "checkbox" ? props.checked : undefined}
               required={!!props.required}
-              onChange={onChange}
+              onChange={(e) => {
+                onChange(e);
+                if (props.onChange) props.onChange(e);
+              }}
               className={`w-full rounded-md border px-4 py-2 focus:outline-none ${
                 error ? "ring-2 ring-red-500" : "ring-blue-400 focus:ring-2"
               }`}

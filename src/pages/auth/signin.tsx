@@ -1,64 +1,55 @@
-import { useState } from "react";
-import Form, {
-  InputText,
-  InputPassword,
-  InputEmail,
-  InputNumber,
-  InputCheckbox,
-  InputRadio,
-  InputSelect,
-  InputTextarea,
-  InputDate,
-  InputFile,
-  InputTime,
-  InputColor,
-  InputRange,
-} from "@/components/Form";
+import React from "react";
+import Link from "next/link";
+import bcrypt from "bcryptjs";
+
+import Form, { InputPassword, InputEmail } from "@/components/Form";
 
 SignIn.title = "Sign In";
 export default function SignIn() {
-  const onSubmit = (data: object) => {
+  const onSubmit = (data: Record<string, any>) => {
+    // Simulating fetching user data from the database
+    const userData = {
+      email: "example@example.com",
+      password: "$2a$10$PgyEvEx3pdRYk8ALwc0E6eGSKWSDK7GbbavA71iDMxU54Orjmbqii", // Hashed password from the database
+    };
+    // Compare the entered password with the hashed password from the database
+    const passwordMatch = bcrypt.compareSync(data.password, userData.password);
+
+    if (passwordMatch) {
+      console.log("Password is correct : welcome");
+      // Proceed with the sign-in process
+    } else {
+      console.log("Password is incorrect : try again");
+      // Show an error message or take appropriate action
+    }
     console.log(data);
   };
 
   return (
-    <main className="min-h-screen">
-      <Form onSubmit={onSubmit}>
-        <InputText name="name" label="Name" />
-        <InputEmail name="email" label="Email" />
-        <InputPassword name="password" label="Password" />
-        <InputNumber name="age" label="Age" min={18} max={100} />
-        <InputCheckbox name="agree" label="Agree to terms" />
-        <InputRadio
-          name="gender"
-          label="Gender"
-          options={[
-            { label: "Male", value: "male" },
-            { label: "Female", value: "female" },
-          ]}
-        />
-        <InputSelect
-          name="country"
-          label="Country"
-          options={[
-            { label: "USA", value: "usa" },
-            { label: "Canada", value: "canada" },
-            { label: "UK", value: "uk" },
-          ]}
-        />
-        <InputTextarea name="message" label="Message" />
-        <InputDate name="dob" label="Date of Birth" />
-        <InputFile name="avatar" label="Avatar" />
-        <InputTime name="meetingTime" label="Meeting Time" />
-        <InputColor name="favoriteColor" label="Favorite Color" />
-        <InputRange name="rating" label="Rating" min={1} max={5} step={0.5} />
-        <button
-          type="submit"
-          className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-        >
-          Submit
-        </button>
-      </Form>
+    <main className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="w-96 rounded bg-white px-8 py-6 shadow-md">
+        <h2 className="mb-4 text-2xl font-bold">Sign in</h2>
+        <Form onSubmit={onSubmit} className="space-y-4">
+          <InputEmail name="email" label="Email" required />
+          <InputPassword name="password" label="Password" required />
+
+          <button
+            type="submit"
+            className="focus:shadow-outline w-full rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          >
+            Sign in
+          </button>
+        </Form>
+
+        <div className="mt-4 text-center">
+          <p>
+            Don't have an account yet?{" "}
+            <Link href="/auth/signup" className="text-blue-500">
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
     </main>
   );
 }
