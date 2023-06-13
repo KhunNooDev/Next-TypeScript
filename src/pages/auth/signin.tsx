@@ -1,28 +1,35 @@
 import React from "react";
 import Link from "next/link";
-import bcrypt from "bcryptjs";
+import { useRouter } from "next/router";
+import axios, { AxiosError } from "axios";
 
 import Form, { InputPassword, InputEmail } from "@/components/Form";
 
 SignIn.title = "Sign In";
 export default function SignIn() {
-  const onSubmit = (data: Record<string, any>) => {
-    // Simulating fetching user data from the database
-    const userData = {
-      email: "example@example.com",
-      password: "$2a$10$PgyEvEx3pdRYk8ALwc0E6eGSKWSDK7GbbavA71iDMxU54Orjmbqii", // Hashed password from the database
-    };
-    // Compare the entered password with the hashed password from the database
-    const passwordMatch = bcrypt.compareSync(data.password, userData.password);
+  const router = useRouter();
 
-    if (passwordMatch) {
-      console.log("Password is correct : welcome");
-      // Proceed with the sign-in process
-    } else {
-      console.log("Password is incorrect : try again");
-      // Show an error message or take appropriate action
+  const onSubmit = async (data: Record<string, any>) => {
+    try {
+      const response = await axios.post("/api/auth/signin", data);
+      console.log(response.data); // You can do something with the response if needed
+
+      // Redirect to the home page after successful sign-in
+      router.push("/");
+    } catch (error) {
+      if (
+        (error as AxiosError).response &&
+        (error as AxiosError).response?.status === 401
+      ) {
+        console.log(
+          "Invalid credentials: Please check your email and password"
+        );
+        // Display an error message to the user
+      } else {
+        console.log("Error:", error);
+        // Handle other types of errors or show a generic error message
+      }
     }
-    console.log(data);
   };
 
   return (

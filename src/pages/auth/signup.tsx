@@ -1,25 +1,24 @@
 import React from "react";
 import Link from "next/link";
-import bcrypt from "bcryptjs";
+import { useRouter } from "next/router";
+import axios from "axios";
 import Form, { InputText, InputEmail, InputPassword } from "@/components/Form";
 
 SignUp.title = "Sign Up";
 export default function SignUp() {
-  const onSubmit = (data: Record<string, any>) => {
-    const { password, confirmPassword, ...userData } = data;
+  const router = useRouter();
 
-    if (password !== confirmPassword) {
-      console.log("Password and Confirm Password do not match");
-      return;
+  const onSubmit = async (data: Record<string, any>) => {
+    try {
+      const response = await axios.post("/api/auth/signup", data);
+      console.log(response.data); // You can do something with the response if needed
+
+      // Redirect to the home page after successful sign-up
+      router.push("/auth/signin");
+    } catch (error) {
+      console.log("Error:", error);
+      // Handle the error or show an error message
     }
-
-    const hashedPassword = bcrypt.hashSync(password, 10);
-    const newUser = {
-      ...userData,
-      password: hashedPassword,
-    };
-
-    console.log(newUser);
   };
 
   return (
