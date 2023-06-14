@@ -1,19 +1,23 @@
 import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import Navbar from "@/components/Navbar";
-import Head from "next/head";
 import { NextComponentType, NextPageContext } from "next";
+import type { AppProps } from "next/app";
+import Head from "next/head";
+import { SessionProvider } from "next-auth/react";
 
-interface MyAppProps extends AppProps {
+import Navbar from "@/components/Navbar";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
+interface IApp extends AppProps {
   Component: NextComponentType<NextPageContext, any, any> & {
     title?: string;
+    requireAuth?: boolean;
   };
 }
-export default function App({ Component, pageProps }: MyAppProps) {
+export default function App({ Component, pageProps }: IApp) {
   const { title } = Component;
 
   return (
-    <>
+    <SessionProvider session={pageProps.session}>
       <Head>
         <title>{title || "NEXTts"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,7 +27,13 @@ export default function App({ Component, pageProps }: MyAppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <Component {...pageProps} />
-    </>
+      {Component.requireAuth ? (
+        <ProtectedRoute>
+          <Component {...pageProps} />
+        </ProtectedRoute>
+      ) : (
+        <Component {...pageProps} />
+      )}
+    </SessionProvider>
   );
 }

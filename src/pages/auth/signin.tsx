@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import axios, { AxiosError } from "axios";
+import { signIn } from "next-auth/react";
 
 import Form, { InputPassword, InputEmail } from "@/components/Form";
 
@@ -11,24 +11,17 @@ export default function SignIn() {
 
   const onSubmit = async (data: Record<string, any>) => {
     try {
-      const response = await axios.post("/api/auth/signin", data);
-      console.log(response.data); // You can do something with the response if needed
+      await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
 
       // Redirect to the home page after successful sign-in
       router.push("/");
     } catch (error) {
-      if (
-        (error as AxiosError).response &&
-        (error as AxiosError).response?.status === 401
-      ) {
-        console.log(
-          "Invalid credentials: Please check your email and password"
-        );
-        // Display an error message to the user
-      } else {
-        console.log("Error:", error);
-        // Handle other types of errors or show a generic error message
-      }
+      console.log("Error:", error);
+      // Handle the error or show an error message
     }
   };
 

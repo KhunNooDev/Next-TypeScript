@@ -1,10 +1,11 @@
 import { HiShoppingCart } from "react-icons/hi";
+import Link from "next/link";
 
 import { IProduct } from "@/utils/database/models/Product";
 import useProduct from "@/utils/hooks/useProduct";
-import Link from "next/link";
 
 Services.title = "Services";
+Services.requireAuth = true;
 export default function Services() {
   const { data } = useProduct();
 
