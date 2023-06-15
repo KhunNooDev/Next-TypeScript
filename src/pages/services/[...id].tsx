@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import useProduct from "@/utils/hooks/useProduct";
 
+ProductPage.title = "Services";
+ProductPage.requireAuth = true;
 export default function ProductPage() {
   const router = useRouter();
   const { id } = router.query;

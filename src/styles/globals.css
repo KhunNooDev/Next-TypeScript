@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border scroll-smooth;
+  }
+
+  /* Customize the scrollbar width */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  /* Customize the scrollbar track */
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-50 dark:bg-gray-800;
+  }
+
+  /* Customize the scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    @apply rounded bg-blue-500;
+  }
+}
